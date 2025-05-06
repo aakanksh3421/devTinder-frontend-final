@@ -12,6 +12,7 @@ const Login = () => {
   const [lastName, setLastName] = useState("");
   const [isLoginForm, setIsLoginForm] = useState(true);
   const [error, setError] = useState("");
+  const [ showPassword,setShowPassword] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -89,6 +90,17 @@ const Login = () => {
                 value={emailId}
                 className="input input-bordered w-full max-w-xs"
                 onChange={(e) => setEmailId(e.target.value)}
+                onBlur={(e) =>{
+                  const input = e.target.value
+                  const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input);
+                  const rvce = /@rvce\.edu\.in$/.test(input);
+                  if (!valid || !rvce) {
+                    setError("Please enter valid RVCE email ID")
+                  }else{
+                    setError("")
+                  }
+                }
+                }
               />
             </label>
             <label className="form-control w-full max-w-xs my-2">
@@ -96,18 +108,20 @@ const Login = () => {
                 <span className="label-text">Password</span>
               </div>
               <input
-                type="password"
+                type= {showPassword ? "text" : "password"}
                 value={password}
                 className="input input-bordered w-full max-w-xs"
                 onChange={(e) => setPassword(e.target.value)}
               />
             </label>
+            <button onClick={() => setShowPassword(!showPassword)}>{showPassword ? 'Hide Password ' : ' Show Password ' }</button>
           </div>
           <p className="text-red-500">{error}</p>
           <div className="card-actions justify-center m-2">
             <button
-              className="btn btn-primary"
+              className={`btn btn-primary ${error ? 'btn-disabled opacity-50 cursor-not-allowed' : ''}`}
               onClick={isLoginForm ? handleLogin : handleSignUp}
+              disabled = {!!error}
             >
               {isLoginForm ? "Login" : "Sign Up"}
             </button>
