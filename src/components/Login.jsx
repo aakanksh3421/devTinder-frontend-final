@@ -65,7 +65,7 @@ const Login = () => {
                     type="text"
                     value={firstName}
                     className="input input-bordered w-full max-w-xs"
-                    onChange={(e) => setFirstName(e.target.value)}
+                    onChange={(e) => {setFirstName(e.target.value); setError("");}}
                   />
                 </label>
                 <label className="form-control w-full max-w-xs my-2">
@@ -76,7 +76,7 @@ const Login = () => {
                     type="text"
                     value={lastName}
                     className="input input-bordered w-full max-w-xs"
-                    onChange={(e) => setLastName(e.target.value)}
+                    onChange={(e) => {setLastName(e.target.value); setError("");}}
                   />
                 </label>
               </>
@@ -89,7 +89,7 @@ const Login = () => {
                 type="text"
                 value={emailId}
                 className="input input-bordered w-full max-w-xs"
-                onChange={(e) => setEmailId(e.target.value)}
+                onChange={(e) => {setEmailId(e.target.value) ; setError("");}}
                 onBlur={(e) =>{
                   const input = e.target.value
                   const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input);
@@ -111,7 +111,7 @@ const Login = () => {
                 type= {showPassword ? "text" : "password"}
                 value={password}
                 className="input input-bordered w-full max-w-xs"
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {setPassword(e.target.value); setError("");}}
               />
             </label>
             <button onClick={() => setShowPassword(!showPassword)}>{showPassword ? 'Hide Password ' : ' Show Password ' }</button>

@@ -13,8 +13,23 @@ const EditProfile = ({ user }) => {
   const [gender, setGender] = useState(user.gender || "");
   const [about, setAbout] = useState(user.about || "");
   const [error, setError] = useState("");
+  const [skills, setSkills] = useState(user.skills || []);
+  const [skInput, setSkInput] = useState((user.skills || []).join(", "));
   const dispatch = useDispatch();
   const [showToast, setShowToast] = useState(false);
+
+  const handleInput = (e) => {
+    const ip = e.target.value;
+    setSkInput(ip);
+
+    const skillsArray = ip
+    .split(",")
+    .map(skill => skill.trim())
+    .filter(skill => skill);
+
+    setSkills(skillsArray);
+
+  }
 
   const saveProfile = async () => {
     //Clear Errors
@@ -29,15 +44,24 @@ const EditProfile = ({ user }) => {
           age,
           gender,
           about,
+          skills,
         },
         { withCredentials: true }
       );
+      console.log("response:", response.data);
       dispatch(addUser(res?.data?.data));
       setShowToast(true);
       setTimeout(() => {
         setShowToast(false);
       }, 3000);
     } catch (err) {
+      if (err.response) {
+        console.log("Server responded with an error:", err.response.data);
+      } else if (err.request) {
+        console.log("No response received. Check your server and network.");
+      } else {
+        console.log("Error setting up request:", err.message);
+      }
       setError(err.response.data);
     }
   };
@@ -116,6 +140,18 @@ const EditProfile = ({ user }) => {
                     onChange={(e) => setAbout(e.target.value)}
                   />
                 </label>
+                <label className="form-control w-full max-w-xs my-2">
+                  <div className="label">
+                    <span className="label-text">Skills:</span>
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="enter skills seperated by comma"
+                    value={skInput}
+                    className="input input-bordered w-full max-w-xs"
+                    onChange={handleInput}
+                  />
+                </label>
               </div>
               <p className="text-red-500">{error}</p>
               <div className="card-actions justify-center m-2">
@@ -127,7 +163,7 @@ const EditProfile = ({ user }) => {
           </div>
         </div>
         <UserCard
-          user={{ firstName, lastName, photoUrl, age, gender, about }}
+          user={{ firstName, lastName, photoUrl, age, gender, about , skills }}
         />
       </div>
       {showToast && (
